@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Dental Clinic System</title>
+    <title>iTeeth</title>
     <link rel="icon" href="{{ asset('icons/tooth.png') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles

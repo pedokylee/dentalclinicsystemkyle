@@ -8,8 +8,9 @@ use App\Http\Middleware\AdminMiddleware;
 
 //normal routes for non admin users 
 Route::get('/', HomePage::class);
-Route::get('/login', Login::class)->name('login');
 
+//admin routes
+Route::get('/login', Login::class)->name('login');
 Route::get('/admin/dashboard', Dashboard::class)
     ->middleware(['auth', 'admin'])
     ->name('admin.dashboard');

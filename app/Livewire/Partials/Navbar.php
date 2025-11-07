@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Partials;
 
 use Livewire\Component;
 
-class HomePage extends Component
+class Navbar extends Component
 {
     public $mobileMenuOpen = false;
 
@@ -12,9 +12,9 @@ class HomePage extends Component
     {
         $this->mobileMenuOpen = !$this->mobileMenuOpen;
     }
-
+    
     public function render()
     {
-        return view('livewire.home-page')->layout('layouts.app');
+        return view('livewire.partials.navbar')->layout('layouts.app');
     }
 }

@@ -8,6 +8,6 @@ class Clients extends Component
 {
     public function render()
     {
-        return view('livewire.pages.clients');
+        return view('livewire.pages.clients')->layout('layouts.app');
     }
 }

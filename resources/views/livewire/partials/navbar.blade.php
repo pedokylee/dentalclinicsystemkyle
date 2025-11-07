@@ -19,22 +19,19 @@
 
             <!-- Desktop Navigation -->
             <div class="hidden md:flex md:items-center md:space-x-1">
-                <a href="#about" class="px-4 py-2 text-white hover:bg-white hover:bg-opacity-20 rounded-md transition duration-300 font-medium">
+                <a wire:click.prevent='toAbout' class="px-4 py-2 text-white hover:bg-white hover:bg-opacity-20 rounded-md transition duration-300 font-medium">
                     About
                 </a>
-                <a href="#services" class="px-4 py-2 text-white hover:bg-white hover:bg-opacity-20 rounded-md transition duration-300 font-medium">
+                <a  wire:click.prevent='toServices' class="px-4 py-2 text-white hover:bg-white hover:bg-opacity-20 rounded-md transition duration-300 font-medium">
                     Services
                 </a>
-                <a href="#clients" class="px-4 py-2 text-white hover:bg-white hover:bg-opacity-20 rounded-md transition duration-300 font-medium">
+                <a wire:click.prevent='toDentist' class="px-4 py-2 text-white hover:bg-white hover:bg-opacity-20 rounded-md transition duration-300 font-medium">
                     Clients
                 </a>
-                <a href="#locations" class="px-4 py-2 text-white hover:bg-white hover:bg-opacity-20 rounded-md transition duration-300 font-medium">
+                <h2 wire:click.prevent='toLocations' class="px-4 py-2 text-white hover:bg-white hover:bg-opacity-20 rounded-md transition duration-300 font-medium">
                     Locations
                 </a>
-                <a href="#contact" class="px-4 py-2 text-white hover:bg-white hover:bg-opacity-20 rounded-md transition duration-300 font-medium">
-                    Contact Us
-                </a>
-                <a href="#appointment" class="ml-2 px-6 py-2 bg-white text-blue-600 hover:bg-blue-50 rounded-md transition duration-300 font-semibold shadow-md">
+                <h2 wire:click.prevent='toAppointment' class="ml-2 px-6 py-2 bg-white text-blue-600 hover:bg-blue-50 rounded-md transition duration-300 font-semibold shadow-md">
                     Appointment
                 </a>
             </div>
@@ -67,7 +64,7 @@
             </div>
         </div>
 
-        <!-- Mobile Navigation -->
+        {{-- <!-- Mobile Navigation -->
         <div 
             x-show="$wire.mobileMenuOpen"
             x-transition:enter="transition ease-out duration-200"
@@ -78,26 +75,23 @@
             x-transition:leave-end="opacity-0 transform scale-95"
             class="md:hidden pb-4"
         >
-            <div class="flex flex-col space-y-2">
-                <a href="#about" class="px-4 py-2 text-white hover:bg-white hover:bg-opacity-20 rounded-md transition duration-300 font-medium">
+            <div class="hidden md:flex md:items-center md:space-x-1">
+                <p wire:click='toAbout' class="px-4 py-2 text-white hover:bg-white hover:bg-opacity-20 rounded-md transition duration-300 font-medium">
                     About
-                </a>
-                <a href="#services" class="px-4 py-2 text-white hover:bg-white hover:bg-opacity-20 rounded-md transition duration-300 font-medium">
+                </p>
+                <p  wire:click='toServices' class="px-4 py-2 text-white hover:bg-white hover:bg-opacity-20 rounded-md transition duration-300 font-medium">
                     Services
-                </a>
-                <a href="#clients" class="px-4 py-2 text-white hover:bg-white hover:bg-opacity-20 rounded-md transition duration-300 font-medium">
+                </p>
+                <p wire:click='toDentist' class="px-4 py-2 text-white hover:bg-white hover:bg-opacity-20 rounded-md transition duration-300 font-medium">
                     Clients
-                </a>
-                <a href="#locations" class="px-4 py-2 text-white hover:bg-white hover:bg-opacity-20 rounded-md transition duration-300 font-medium">
+                </p>
+                <p wire:click='toLocations' class="px-4 py-2 text-white hover:bg-white hover:bg-opacity-20 rounded-md transition duration-300 font-medium">
                     Locations
-                </a>
-                <a href="#contact" class="px-4 py-2 text-white hover:bg-white hover:bg-opacity-20 rounded-md transition duration-300 font-medium">
-                    Contact Us
-                </a>
-                <a href="#appointment" class="mx-4 mt-2 px-6 py-2 bg-white text-blue-600 hover:bg-blue-50 rounded-md transition duration-300 font-semibold shadow-md text-center">
+                </p>
+                <p wire:click='toAppointment' class="ml-2 px-6 py-2 bg-white text-blue-600 hover:bg-blue-50 rounded-md transition duration-300 font-semibold shadow-md">
                     Appointment
-                </a>
+                </p>
             </div>
         </div>
-    </div>
+    </div> --}}
 </nav>

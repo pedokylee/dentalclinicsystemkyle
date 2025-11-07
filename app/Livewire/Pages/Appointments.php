@@ -8,6 +8,6 @@ class Appointments extends Component
 {
     public function render()
     {
-        return view('livewire.pages.appointments');
+        return view('livewire.pages.appointments')->layout('layouts.app');
     }
 }

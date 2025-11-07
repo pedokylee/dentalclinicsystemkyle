@@ -71,7 +71,7 @@
         <div class="text-center pt-4">
           <button type="submit"
                   class="px-10 py-3 bg-blue-600 text-white font-semibold rounded-md shadow-md hover:bg-blue-700 transition">
-            Confirm Appointment
+            Submit Appointment
           </button>
         </div>
       </form>

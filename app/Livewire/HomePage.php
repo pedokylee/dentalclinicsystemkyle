@@ -17,6 +17,10 @@ class HomePage extends Component
         return redirect()->to('/appointment');
     }
 
+    public function toServices(){
+        return redirect()->to('/services');
+    }
+
     public function render()
     {
         return view('livewire.home-page')->layout('layouts.app');

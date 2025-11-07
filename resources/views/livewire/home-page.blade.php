@@ -10,10 +10,10 @@
           At <span class="font-semibold text-blue-600">iTeeth Dental Clinic</span>, we combine modern dental care with a gentle touch to make every visit comfortable and confident.
         </p>
         <div class="flex flex-col sm:flex-row justify-center md:justify-start gap-4">
-          <a href="#appointment" class="px-8 py-3 bg-blue-600 text-white rounded-md font-medium shadow-lg hover:bg-blue-700 transition">
+          <a wire:click.prevent='toAppointment' class="px-8 py-3 bg-blue-600 text-white rounded-md font-medium shadow-lg hover:bg-blue-700 transition">
             Book Appointment
           </a>
-          <a href="#services" class="px-8 py-3 border border-blue-600 text-blue-600 rounded-md font-medium hover:bg-blue-50 transition">
+          <a wire:click.prevent='toServices' class="px-8 py-3 border border-blue-600 text-blue-600 rounded-md font-medium hover:bg-blue-50 transition">
             View Services
           </a>
         </div>

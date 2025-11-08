@@ -9,13 +9,10 @@
 </head>
 <body class="antialiased">
 
-    <livewire:partials.navbar />
-
-    <main class="p-6">
+    <main>
         {{ $slot }}
     </main>
 
-    <livewire:partials.footer />
     @livewireScripts
     {{-- @stack('scripts') --}}
 </body>

@@ -5,18 +5,20 @@ namespace App\Livewire;
 use Livewire\Component;
 
 class HomePage extends Component
-{   
-    //SPA style Not implemented yet 
-    // public function goToLogin(){
-    //     $this->emitUp('goToLogin');
+{
+    // public $mobileMenuOpen = false;
+
+    // public function toggleMobileMenu()
+    // {
+    //     $this->mobileMenuOpen = !$this->mobileMenuOpen;
     // }
 
-    public function toLogin(){
-        return redirect()->to('/login');
+    public function toAppointment(){
+        return redirect()->to('/appointment');
     }
 
-    public function toDashboard(){
-        return redirect()->to('/admin/dashboard');
+    public function toServices(){
+        return redirect()->to('/services');
     }
 
     public function render()

@@ -6,14 +6,14 @@ use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 class Dashboard extends Component
 {   
-    public function logout()
-{
+    public function logout(){
     Auth::logout();
     return redirect()->to('/login');
 }
+
     public function render()
     {
         return view('livewire.admin.dashboard')
-        ->layout('layouts.app');
+        ->layout('layouts.admin');
     }
 }

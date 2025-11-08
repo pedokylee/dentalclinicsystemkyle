@@ -26,6 +26,7 @@ Route::get('/services', Services::class);
 Route::get('/appointment', Appointments::class);
 
 //admin middleware
+Route::get('/login', Login::class);
 Route::get('/admin/dashboard', Dashboard::class)
     ->middleware(['auth', 'admin'])
     ->name('admin.dashboard');

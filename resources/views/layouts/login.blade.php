@@ -9,11 +9,10 @@
 </head>
 <body class="antialiased">
 
-    <livewire:admin.header />
-    
     <main>
         {{ $slot }}
     </main>
+
 
     @livewireScripts
 </body>

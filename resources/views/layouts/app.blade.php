@@ -16,8 +16,7 @@
     </main>
 
     <livewire:partials.footer />
+    
     @livewireScripts
-    {{-- @stack('scripts') --}}
 </body>
 </html>
- {{-- <livewire:page-controller /> --}}

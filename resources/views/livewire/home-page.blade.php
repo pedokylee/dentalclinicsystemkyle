@@ -18,11 +18,6 @@
           </a>
         </div>
       </div>
-{{-- 
-      <div class="md:w-1/2 mt-10 md:mt-0">
-        <img src="https://cdn.pixabay.com/photo/2016/03/23/08/34/dentist-1276266_1280.jpg" alt="Dental Care" class="rounded-2xl shadow-lg w-full">
-      </div>
-    </div> --}}
   </section>
 
 <!-- Contact & Appointment CTA -->

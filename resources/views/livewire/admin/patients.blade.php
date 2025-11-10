@@ -75,9 +75,9 @@
                                 {{ $patient->next_appointment ? $patient->next_appointment->format('Y-m-d') : 'Not scheduled' }}
                             </td>
                             <td class="px-4 py-2">
-                                <span class="px-2 py-1 rounded-full text-xs font-semibold
-                                    {{ $patient->status === 'active' ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-700' }}">
-                                    {{ ucfirst($patient->status) }}
+                                <span class="inline-block px-2 py-1 rounded-full text-xs font-semibold whitespace-nowrap
+                                    {{ $patient->status === 'active' ? 'bg-green-100 text-green-700' : ($patient->status === 'inactive' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700') }}">
+                                    {{ ucfirst($patient->status ?? 'N/A') }}
                                 </span>
                             </td>
                             <td class="px-4 py-2">
@@ -204,12 +204,21 @@
                             @endif
                         </div>
 
+                        {{-- Status --}}
                         <div class="flex justify-between text-sm">
                             <span class="text-gray-600">Status:</span>
-                            <span class="px-2 py-1 rounded-full text-xs font-semibold
-                                {{ $selectedPatient->status === 'active' ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-700' }}">
-                                {{ ucfirst($selectedPatient->status) }}
-                            </span>
+                            @if($isEditMode)
+                                <select wire:model.defer="status" class="border rounded px-2 py-1">
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
+                                    <option value="pending">Pending</option>
+                                </select>
+                            @else
+                                <span class="inline-block px-2 py-1 rounded-full text-xs font-semibold whitespace-nowrap
+                                    {{ $selectedPatient->status === 'active' ? 'bg-green-100 text-green-700' : ($selectedPatient->status === 'inactive' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700') }}">
+                                    {{ ucfirst($selectedPatient->status ?? 'N/A') }}
+                                </span>
+                            @endif
                         </div>
 
                         <div class="flex justify-between text-sm">

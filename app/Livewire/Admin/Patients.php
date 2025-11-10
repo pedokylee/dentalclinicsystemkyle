@@ -2,23 +2,32 @@
 
 namespace App\Livewire\Admin;
 
-use Livewire\Component;
 use App\Models\Patient;
 use App\Models\User;
+use Livewire\Component;
 
 class Patients extends Component
 {
     public $searchQuery = '';
+
+    public $status = 'active'; // default
+
     public $isAddModalOpen = false;
+
     public $isViewModalOpen = false; // for viewing details
+
     public $isEditMode = false; // toggle for edit mode
 
     public $selectedPatient;
 
     public $name;
+
     public $gender;
+
     public $phone;
+
     public $email;
+
     public $address;
 
     public $patients;
@@ -30,9 +39,9 @@ class Patients extends Component
 
     public function updatedSearchQuery()
     {
-        $query = '%' . $this->searchQuery . '%';
+        $query = '%'.$this->searchQuery.'%';
         $this->patients = Patient::with('user')
-            ->whereHas('user', fn($q) => $q->where('name', 'like', $query)->orWhere('email', 'like', $query))
+            ->whereHas('user', fn ($q) => $q->where('name', 'like', $query)->orWhere('email', 'like', $query))
             ->orWhere('contact_number', 'like', $query)
             ->latest()
             ->get();
@@ -81,6 +90,7 @@ class Patients extends Component
             'user_id' => $user->id,
             'contact_number' => $this->phone,
             'address' => $this->address,
+            'status' => $this->status ?? 'active',
         ]);
 
         $this->patients = Patient::with('user')->latest()->get();
@@ -99,6 +109,7 @@ class Patients extends Component
         $this->gender = $this->selectedPatient->gender;
         $this->phone = $this->selectedPatient->contact_number;
         $this->address = $this->selectedPatient->address;
+        $this->status = $this->selectedPatient->status ?? 'active'; // populate status
 
         $this->isViewModalOpen = true;
     }
@@ -119,10 +130,11 @@ class Patients extends Component
     {
         $this->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $this->selectedPatient->user_id,
+            'email' => 'required|email|unique:users,email,'.$this->selectedPatient->user_id,
             'phone' => 'required|string|max:20',
             'gender' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:255',
+            'status' => 'required|in:active,inactive,pending', // validate status
         ]);
 
         // Update User
@@ -136,6 +148,7 @@ class Patients extends Component
             'contact_number' => $this->phone,
             'gender' => $this->gender,
             'address' => $this->address,
+            'status' => $this->status, // save status
         ]);
 
         $this->patients = Patient::with('user')->latest()->get();

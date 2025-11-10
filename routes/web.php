@@ -30,7 +30,7 @@ Route::get('/services', PublicServices::class);
 Route::get('/appointment', PublicAppointments::class);
 Route::get('/login', Login::class);
 
-// Admin routes (middleware stays the same)
+// Admin routes -
 Route::get('/admin/dashboard', Dashboard::class)
     ->middleware(['auth', 'admin'])
     ->name('admin.dashboard');

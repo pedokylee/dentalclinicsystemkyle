@@ -3,13 +3,17 @@
 namespace App\Livewire\Admin;
 
 use Livewire\Component;
+use App\Models\Patient;
+use App\Models\User;
 
 class Patients extends Component
 {
-    // Reactive properties
     public $searchQuery = '';
     public $isAddModalOpen = false;
-    public $selectedPatient = null;
+    public $isViewModalOpen = false; // for viewing details
+    public $isEditMode = false; // toggle for edit mode
+
+    public $selectedPatient;
 
     public $name;
     public $gender;
@@ -17,40 +21,35 @@ class Patients extends Component
     public $email;
     public $address;
 
-    public $patients = []; // Patient list
-    public $filteredPatients = []; // Filtered list
+    public $patients;
 
     public function mount()
     {
-        $this->patients = []; 
-        $this->filteredPatients = $this->patients;
+        $this->patients = Patient::with('user')->latest()->get();
     }
 
-    // Search functionality
     public function updatedSearchQuery()
     {
-        $query = strtolower($this->searchQuery);
-        $this->filteredPatients = array_filter($this->patients, function ($patient) use ($query) {
-            return str_contains(strtolower($patient['name']), $query) ||
-                   str_contains(strtolower($patient['email']), $query) ||
-                   str_contains($patient['phone'], $query);
-        });
+        $query = '%' . $this->searchQuery . '%';
+        $this->patients = Patient::with('user')
+            ->whereHas('user', fn($q) => $q->where('name', 'like', $query)->orWhere('email', 'like', $query))
+            ->orWhere('contact_number', 'like', $query)
+            ->latest()
+            ->get();
     }
 
-    // Open Add Patient form
+    // ---------- ADD PATIENT ----------
     public function showAddForm()
     {
         $this->resetForm();
         $this->isAddModalOpen = true;
     }
 
-    // Close Add Patient form
     public function closeAddForm()
     {
         $this->isAddModalOpen = false;
     }
 
-    // Reset form fields
     public function resetForm()
     {
         $this->name = '';
@@ -58,34 +57,106 @@ class Patients extends Component
         $this->phone = '';
         $this->email = '';
         $this->address = '';
+        $this->isEditMode = false;
+        $this->selectedPatient = null;
     }
 
-    // Add patient (example logic, you can replace with DB insert)
     public function addPatient()
     {
         $this->validate([
-            'name' => 'required|string',
-            'email' => 'required|email',
-            'phone' => 'required|string',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'phone' => 'required|string|max:20',
+            'gender' => 'nullable|string|max:20',
+            'address' => 'nullable|string|max:255',
         ]);
 
-        $newPatient = [
+        $user = User::create([
             'name' => $this->name,
-            'gender' => $this->gender,
-            'phone' => $this->phone,
             'email' => $this->email,
+            'password' => bcrypt('password'),
+        ]);
+
+        Patient::create([
+            'user_id' => $user->id,
+            'contact_number' => $this->phone,
             'address' => $this->address,
-        ];
+        ]);
 
-        $this->patients[] = $newPatient;
-        $this->filteredPatients = $this->patients;
-
+        $this->patients = Patient::with('user')->latest()->get();
         $this->closeAddForm();
+        $this->resetForm();
+
+        session()->flash('message', 'New patient added successfully!');
+    }
+
+    // ---------- VIEW PATIENT ----------
+    public function viewPatient($id)
+    {
+        $this->selectedPatient = Patient::with('user')->findOrFail($id);
+        $this->name = $this->selectedPatient->user->name;
+        $this->email = $this->selectedPatient->user->email;
+        $this->gender = $this->selectedPatient->gender;
+        $this->phone = $this->selectedPatient->contact_number;
+        $this->address = $this->selectedPatient->address;
+
+        $this->isViewModalOpen = true;
+    }
+
+    public function closeModal()
+    {
+        $this->isViewModalOpen = false;
+        $this->resetForm();
+    }
+
+    // ---------- EDIT PATIENT ----------
+    public function enableEdit()
+    {
+        $this->isEditMode = true;
+    }
+
+    public function updatePatient()
+    {
+        $this->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $this->selectedPatient->user_id,
+            'phone' => 'required|string|max:20',
+            'gender' => 'nullable|string|max:20',
+            'address' => 'nullable|string|max:255',
+        ]);
+
+        // Update User
+        $this->selectedPatient->user->update([
+            'name' => $this->name,
+            'email' => $this->email,
+        ]);
+
+        // Update Patient
+        $this->selectedPatient->update([
+            'contact_number' => $this->phone,
+            'gender' => $this->gender,
+            'address' => $this->address,
+        ]);
+
+        $this->patients = Patient::with('user')->latest()->get();
+        $this->isEditMode = false;
+        session()->flash('message', 'Patient updated successfully!');
+    }
+
+    // ---------- DELETE PATIENT ----------
+    public function deletePatient($id)
+    {
+        $patient = Patient::findOrFail($id);
+        $patient->delete();
+        $this->patients = Patient::with('user')->latest()->get();
+        $this->closeModal();
+        session()->flash('message', 'Patient deleted successfully!');
     }
 
     public function render()
     {
-        return view('livewire.admin.patients')
-            ->layout('layouts.admin');
+        return view('livewire.admin.patients', [
+            'patients' => $this->patients,
+        ])->layout('layouts.admin');
     }
 }

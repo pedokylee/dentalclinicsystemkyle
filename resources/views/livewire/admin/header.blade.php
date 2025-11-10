@@ -18,29 +18,29 @@
                 </div>
             </a>
 
+            <!-- Profile + Dropdown -->
             <div class="relative" wire:click.away="closeForm">
                 <button wire:click="toggleForm" class="flex items-center space-x-2 focus:outline-none">
                     <span class="text-white font-semibold">{{ Auth::user()->name }}</span>
-                    <img src="{{ Auth::user()->profile_photo_url ?? 'https://via.placeholder.com/40' }}" alt="Profile"
-                        class="w-10 h-10 rounded-full border-2 border-white object-cover">
+                    <img src="{{ Auth::user()->profile_photo_url ?? 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png' }}"
+                        alt="Profile" class="w-10 h-10 rounded-full border-2 border-white object-cover">
                 </button>
 
+                <!-- Dropdown menu -->
                 @if($showForm)
-                    <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg overflow-hidden z-50">
+                    <div class="absolute right-0 mt-3 w-48 bg-white rounded-lg shadow-lg overflow-hidden z-50 animate-fade-in">
                         <a href="{{ route('admin.settings') }}"
-                            class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Settings</a>
+                            class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">Settings</a>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit"
                                 class="w-full text-left px-4 py-2 text-red-600 font-semibold rounded-lg hover:bg-red-100 hover:text-red-800 transition-colors duration-200">
                                 Logout
                             </button>
-
                         </form>
                     </div>
                 @endif
             </div>
-
         </div>
     </div>
 </nav>

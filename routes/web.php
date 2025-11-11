@@ -23,9 +23,11 @@ Route::get('/clients', Clients::class);
 Route::get('/locations', Locations::class);
 Route::get('/services', Services::class);
 Route::get('/appointment', Appointments::class);
+s
 
 //admin routes
 Route::get('/login', Login::class)->name('login');
+
 Route::get('/admin/dashboard', Dashboard::class)
     ->middleware(['auth', 'admin'])
     ->name('admin.dashboard');

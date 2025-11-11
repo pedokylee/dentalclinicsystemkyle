@@ -17,6 +17,7 @@ use App\Livewire\Pages\Services;
 
 
 //normal routes/public page
+//normal routes for the public 
 Route::get('/', HomePage::class);
 Route::get('/about', About::class);
 Route::get('/clients', Clients::class);
@@ -25,9 +26,13 @@ Route::get('/services', Services::class);
 Route::get('/appointment', Appointments::class);
 s
 
+<<<<<<< HEAD
 //admin routes
 Route::get('/login', Login::class)->name('login');
 
+=======
+//admin middleware
+>>>>>>> 077f3220bf57c8b696464c7c6416d4f723a8914d
 Route::get('/admin/dashboard', Dashboard::class)
     ->middleware(['auth', 'admin'])
     ->name('admin.dashboard');

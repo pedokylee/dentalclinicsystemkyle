@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('patient_id')->constrained()->cascadeOnDelete();
             $table->foreignId('dentist_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('service_id')->constrained()->cascadeOnDelete();
             $table->foreignId('facility_id')->nullable()->constrained()->nullOnDelete();
             $table->timestamp('appointment_date');
             $table->enum('status', ['scheduled', 'completed', 'cancelled'])->default('scheduled');

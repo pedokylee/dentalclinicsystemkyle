@@ -2,11 +2,12 @@
 
 namespace App\Livewire\Admin;
 
-use Livewire\Component;
 use App\Models\Appointment;
+use App\Models\Dentist;
 use App\Models\Patient;
-use App\Models\User;
+use App\Models\Service;
 use Carbon\Carbon;
+use Livewire\Component;
 
 class Appointments extends Component
 {
@@ -15,28 +16,54 @@ class Appointments extends Component
 
     // Form fields
     public $patient_id;
+    public $dentist_id;
+    public $service_ids = []; // now multiple
     public $date;
     public $time;
-    public $type;
-    public $doctor_id;
     public $status = 'scheduled';
+    public $notes;
+
+    // Loaded data
+    public $patients = [];
+    public $dentists = [];
+    public $services = [];
 
     protected $rules = [
         'patient_id' => 'required|exists:patients,id',
+        'dentist_id' => 'required|exists:dentists,id',
+        'service_ids' => 'required|array|min:1',
+        'service_ids.*' => 'exists:services,id',
         'date' => 'required|date',
-        'time' => 'required',
-        'type' => 'required|string|max:255',
-        'doctor_id' => 'required|exists:users,id',
+        'time' => 'nullable',
+        'status' => 'nullable|string',
+        'notes' => 'nullable|string',
     ];
 
     public function mount()
     {
         $this->selectedDate = Carbon::now()->format('Y-m-d');
+        $this->loadDropdownData();
+    }
+
+    private function loadDropdownData()
+    {
+        $this->patients = Patient::with('user')
+            ->orderByDesc('created_at')
+            ->get();
+
+        $this->dentists = Dentist::where('status', 'active')
+            ->orderBy('name')
+            ->get();
+
+        $this->services = Service::where('is_active', true)
+            ->orderBy('name')
+            ->get();
     }
 
     public function openModal()
     {
-        $this->reset(['patient_id', 'date', 'time', 'type', 'doctor_id']);
+        $this->reset(['patient_id', 'dentist_id', 'service_ids', 'date', 'time', 'notes']);
+        $this->loadDropdownData();
         $this->isModalOpen = true;
     }
 
@@ -49,14 +76,21 @@ class Appointments extends Component
     {
         $this->validate();
 
-        Appointment::create([
+        $appointmentDate = $this->time
+            ? Carbon::parse("{$this->date} {$this->time}")
+            : Carbon::parse($this->date);
+
+        // Create the appointment
+        $appointment = Appointment::create([
             'patient_id' => $this->patient_id,
-            'doctor_id' => $this->doctor_id,
-            'date' => $this->date,
-            'time' => $this->time,
-            'type' => $this->type,
+            'dentist_id' => $this->dentist_id,
+            'appointment_date' => $appointmentDate,
             'status' => $this->status,
+            'notes' => $this->notes,
         ]);
+
+        // Attach multiple services
+        $appointment->services()->attach($this->service_ids);
 
         $this->isModalOpen = false;
         $this->dispatch('appointmentAdded');
@@ -64,18 +98,16 @@ class Appointments extends Component
 
     public function render()
     {
-        $appointments = Appointment::with(['patient.user', 'doctor'])
-            ->whereDate('date', $this->selectedDate)
-            ->orderBy('time', 'asc')
+        $appointments = Appointment::with(['patient.user', 'dentist', 'services'])
+            ->whereDate('appointment_date', $this->selectedDate)
+            ->orderBy('appointment_date', 'asc')
             ->get();
-
-        $patients = Patient::with('user')->get();
-        $doctors = User::where('role', 'doctor')->get();
 
         return view('livewire.admin.appointments', [
             'appointments' => $appointments,
-            'patients' => $patients,
-            'doctors' => $doctors,
+            'patients' => $this->patients,
+            'dentists' => $this->dentists,
+            'services' => $this->services,
         ])->layout('layouts.admin');
     }
 }

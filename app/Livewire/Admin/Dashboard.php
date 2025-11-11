@@ -5,34 +5,25 @@ namespace App\Livewire\Admin;
 use App\Models\Appointment;
 use App\Models\Dentist;
 use App\Models\Patient;
-use App\Models\User;
+use App\Models\Service;
 use Carbon\Carbon;
 use Livewire\Component;
 
 class Dashboard extends Component
 {
-    //patient components
     public $patients = 0;
     public $patientsChange = 0;
 
-    //dentist components
     public $dentists = 0;
     public $activeToday = 0;
     public $appointments = 0;
-
     public $revenue = 0;
 
     public $services = 0;
-    
-    
+    public $activeServices = 0;
 
     public $upcomingAppointments = [];
-
     public $recentActivity = [];
-
-
-   
-
 
     public function mount()
     {
@@ -45,49 +36,29 @@ class Dashboard extends Component
         // Change compared to yesterday
         $this->patientsChange = $this->patients - $yesterdayCount;
 
-        // // Count today's appointments (optional: filter by date)
-        // $this->appointments = Appointment::whereDate('date', now())->count();
+        // Count total services
+        $this->services = Service::count();
 
-        // // Example: total revenue (sum of invoice amounts)
-        // $this->revenue = \App\Models\Invoice::sum('amount');
+        // Count active services
+        $this->activeServices = Service::where('is_active', true)->count();
 
-        // // Example: total services
-        // $this->services = \App\Models\Service::count();
-
-        // Example: total active dentists
-        // Count total active dentists
+        // Count total dentists
         $this->dentists = Dentist::count();
 
         // Count active dentists today
-        $today = Carbon::now()->format('l'); // "Monday"
-
+        $today = Carbon::now()->format('l'); // e.g. "Monday"
         $this->activeToday = Dentist::where('status', 'active')
-            ->whereJsonContains('availability', [$today]) // wrap in array
+            ->whereJsonContains('availability', [$today])
             ->count();
 
-        // Initialize upcoming appointments (optional real query)
-        // $this->upcomingAppointments = Appointment::with('patient')
-        //     ->whereDate('date', now())
-        //     ->orderBy('time')
-        //     ->take(5)
-        //     ->get()
-        //     ->map(function ($appt) {
-        //         return [
-        //             'time' => $appt->time,
-        //             'patient' => $appt->patient->user->name ?? '-',
-        //             'type' => $appt->type ?? '-',
-        //             'status' => $appt->status ?? 'pending',
-        //         ];
-        //     })->toArray();
-
-        // Initialize recent activity (optional real query)
+        // Recent patient activity
         $this->recentActivity = Patient::latest()
             ->take(5)
             ->get()
             ->map(function ($patient) {
                 return [
                     'action' => 'Patient added',
-                    'patient' => $patient->user->name,
+                    'patient' => $patient->user->name ?? 'Unknown',
                     'time' => $patient->created_at->diffForHumans(),
                 ];
             })->toArray();
@@ -95,7 +66,6 @@ class Dashboard extends Component
 
     public function render()
     {
-
         $stats = [
             [
                 'title' => 'Total Patients',
@@ -117,7 +87,7 @@ class Dashboard extends Component
             ],
             [
                 'title' => 'Monthly Revenue',
-                'value' => '$'.$this->revenue,
+                'value' => '$' . $this->revenue,
                 'change' => '+0%',
                 'color' => 'text-purple-600',
                 'bgColor' => 'bg-purple-50',
@@ -126,7 +96,7 @@ class Dashboard extends Component
             [
                 'title' => 'Total Services',
                 'value' => $this->services,
-                'change' => '+0 active',
+                'change' => "+{$this->activeServices} active",
                 'color' => 'text-teal-600',
                 'bgColor' => 'bg-teal-50',
                 'icon' => 'briefcase',

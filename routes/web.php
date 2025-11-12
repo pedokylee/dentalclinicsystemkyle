@@ -28,6 +28,7 @@ Route::get('/clients', Clients::class);
 Route::get('/locations', Locations::class);
 Route::get('/services', PublicServices::class);
 Route::get('/appointment', PublicAppointments::class);
+
 Route::get('/login', Login::class);
 
 // Admin routes -

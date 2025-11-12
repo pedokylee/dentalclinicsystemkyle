@@ -63,10 +63,10 @@
 
                     <div class="flex justify-between items-center pt-3 border-t mt-3">
                         <div class="flex items-center space-x-4">
-                            <div>
+                            {{-- <div>
                                 <p class="text-xs text-gray-500">Duration</p>
                                 <p class="text-sm text-gray-900">{{ $service['duration'] }} min</p>
-                            </div>
+                            </div> --}}
                             <div class="w-px h-8 bg-gray-200"></div>
                             <div>
                                 <p class="text-xs text-gray-500">Price</p>
@@ -113,12 +113,12 @@
                                 class="block w-full border-2 border-gray-200 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 px-3 py-2 text-sm transition-all"></textarea>
                         </div>
 
-                        <div class="grid grid-cols-2 gap-4">
+                        {{-- <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-1">Duration (minutes)</label>
                                 <input type="number" wire:model="duration"
                                     class="block w-full border-2 border-gray-200 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 px-3 py-2 text-sm transition-all">
-                            </div>
+                            </div> --}}
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-1">Price ($)</label>
                                 <input type="number" wire:model="price"

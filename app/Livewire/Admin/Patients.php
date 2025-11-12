@@ -9,27 +9,16 @@ use Livewire\Component;
 class Patients extends Component
 {
     public $searchQuery = '';
-
-    public $status = 'active'; // default
-
+    public $status = 'active';
     public $isAddModalOpen = false;
-
-    public $isViewModalOpen = false; // for viewing details
-
-    public $isEditMode = false; // toggle for edit mode
-
+    public $isViewModalOpen = false;
+    public $isEditMode = false;
     public $selectedPatient;
-
     public $name;
-
     public $gender;
-
     public $phone;
-
     public $email;
-
     public $address;
-
     public $patients;
 
     public function mount()
@@ -103,13 +92,15 @@ class Patients extends Component
     // ---------- VIEW PATIENT ----------
     public function viewPatient($id)
     {
-        $this->selectedPatient = Patient::with('user')->findOrFail($id);
+        $this->selectedPatient = Patient::with(['user', 'appointments.dentist', 'appointments.services'])
+            ->findOrFail($id);
+
         $this->name = $this->selectedPatient->user->name;
         $this->email = $this->selectedPatient->user->email;
         $this->gender = $this->selectedPatient->gender;
         $this->phone = $this->selectedPatient->contact_number;
         $this->address = $this->selectedPatient->address;
-        $this->status = $this->selectedPatient->status ?? 'active'; // populate status
+        $this->status = $this->selectedPatient->status ?? 'active';
 
         $this->isViewModalOpen = true;
     }
@@ -134,25 +125,24 @@ class Patients extends Component
             'phone' => 'required|string|max:20',
             'gender' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:255',
-            'status' => 'required|in:active,inactive,pending', // validate status
+            'status' => 'required|in:active,inactive,pending',
         ]);
 
-        // Update User
         $this->selectedPatient->user->update([
             'name' => $this->name,
             'email' => $this->email,
         ]);
 
-        // Update Patient
         $this->selectedPatient->update([
             'contact_number' => $this->phone,
             'gender' => $this->gender,
             'address' => $this->address,
-            'status' => $this->status, // save status
+            'status' => $this->status,
         ]);
 
         $this->patients = Patient::with('user')->latest()->get();
         $this->isEditMode = false;
+
         session()->flash('message', 'Patient updated successfully!');
     }
 

@@ -13,8 +13,8 @@
                         <h3 class="text-lg font-semibold text-gray-800">Select Date</h3>
                         <button wire:click="openModal"
                             class="flex items-center px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm transition">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-1" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M12 4v16m8-8H4" />
                             </svg>
@@ -22,7 +22,6 @@
                         </button>
                     </div>
 
-                    {{-- Simple date picker --}}
                     <input type="date" wire:model.live="selectedDate"
                         class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
 
@@ -48,9 +47,10 @@
                         <p class="text-gray-500 mb-3">No appointments scheduled for this date</p>
                         <button wire:click="openModal"
                             class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 4v16m8-8H4" />
                             </svg>
                             Schedule Appointment
                         </button>
@@ -62,9 +62,11 @@
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center space-x-4">
                                         <div class="text-center bg-blue-50 rounded-lg p-3">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-blue-600 mb-1 mx-auto"
-                                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                class="w-5 h-5 text-blue-600 mb-1 mx-auto" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    stroke-width="2"
                                                     d="M12 8v4l3 3m6 1a9 9 0 11-18 0 9 9 0 0118 0z" />
                                             </svg>
                                             <p class="text-sm text-gray-900">
@@ -76,14 +78,20 @@
                                             <div class="flex items-center space-x-2 mb-1">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400"
                                                     fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
                                                         d="M5.121 17.804A13.937 13.937 0 0112 15c2.5 0 4.847.655 6.879 1.804M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                                                 </svg>
                                                 <span class="text-gray-900 font-medium">
                                                     {{ $apt->patient->user->name ?? 'N/A' }}
                                                 </span>
                                             </div>
-                                            <p class="text-sm text-gray-600">{{ $apt->service->name ?? 'No service selected' }}</p>
+
+                                            {{-- Show multiple services --}}
+                                            <p class="text-sm text-gray-600">
+                                                {{ $apt->services->pluck('name')->join(', ') ?: 'No services selected' }}
+                                            </p>
+
                                             <p class="text-xs text-gray-500 mt-1">
                                                 {{ $apt->dentist->name ?? 'N/A' }}
                                             </p>
@@ -91,20 +99,25 @@
                                     </div>
 
                                     <div class="flex items-center space-x-3">
-                                        <span class="px-3 py-1 rounded-full text-xs capitalize
-                                                    @if($apt->status == 'confirmed') bg-green-100 text-green-700
-                                                    @elseif($apt->status == 'scheduled') bg-gray-100 text-gray-700
-                                                    @elseif($apt->status == 'completed') bg-blue-100 text-blue-700
-                                                    @elseif($apt->status == 'cancelled') bg-red-100 text-red-700
-                                                    @endif">
+                                        <span
+                                            class="px-3 py-1 rounded-full text-xs capitalize
+                                            @if($apt->status == 'confirmed') bg-green-100 text-green-700
+                                            @elseif($apt->status == 'scheduled') bg-gray-100 text-gray-700
+                                            @elseif($apt->status == 'completed') bg-blue-100 text-blue-700
+                                            @elseif($apt->status == 'cancelled') bg-red-100 text-red-700
+                                            @endif">
                                             {{ $apt->status }}
                                         </span>
 
                                         <div class="flex space-x-2">
-                                            <button
-                                                class="px-3 py-1 border rounded-lg text-sm hover:bg-gray-100 transition">Edit</button>
-                                            <button
-                                                class="px-3 py-1 border rounded-lg text-sm hover:bg-gray-100 transition">Complete</button>
+                                            <button wire:click="openModal({{ $apt->id }})"
+                                                class="px-3 py-1 border rounded-lg text-sm text-blue-600 hover:bg-blue-50 hover:border-blue-400 transition">
+                                                Edit
+                                            </button>
+                                            <button wire:click="delete({{ $apt->id }})"
+                                                class="px-3 py-1 border rounded-lg text-sm text-red-600 hover:bg-red-50 hover:border-red-400 transition">
+                                                Delete
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -116,75 +129,111 @@
         </div>
     </div>
 
-    {{-- Modal --}}
+    {{-- Add/Edit Appointment Modal --}}
     @if($isModalOpen)
-        <div class="fixed inset-0 bg-black/60 backdrop-blur-sm bg-opacity-40 flex items-center justify-center z-50">
-            <div class="bg-white w-full max-w-md rounded-2xl p-6 shadow-xl">
-                <h2 class="text-lg font-semibold mb-4 text-gray-800">Schedule Appointment</h2>
+        <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+            <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl p-8 overflow-y-auto max-h-[90vh]">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-semibold text-gray-800">
+                        {{ $isEditMode ? 'Edit Appointment' : 'New Appointment' }}
+                    </h2>
+                    <button wire:click="closeModal"
+                        class="text-gray-500 hover:text-gray-800 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
 
-                <div class="space-y-4">
-                    {{-- Patient Dropdown --}}
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Patient</label>
-                        <select wire:model="patient_id"
-                            class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400">
-                            <option value="">Select patient</option>
-                            @foreach($patients as $patient)
-                                <option value="{{ $patient->id }}">{{ $patient->user->name }}</option>
-                            @endforeach
-                        </select>
-                        @error('patient_id') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {{-- Left side: appointment info --}}
+                    <div class="space-y-5">
+                        {{-- Patient --}}
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Patient</label>
+                            <select wire:model="patient_id"
+                                class="w-full border rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                                <option value="">Select patient</option>
+                                @foreach($patients as $patient)
+                                    <option value="{{ $patient->id }}">{{ $patient->user->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('patient_id') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                        </div>
+
+                        {{-- Dentist --}}
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Dentist</label>
+                            <select wire:model="dentist_id"
+                                class="w-full border rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                                <option value="">Select dentist</option>
+                                @foreach($dentists as $dentist)
+                                    <option value="{{ $dentist->id }}">{{ $dentist->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('dentist_id') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                        </div>
+
+                        {{-- Date --}}
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Date</label>
+                            <input type="date" wire:model="date"
+                                class="w-full border rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500">
+                            @error('date') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                        </div>
+
+                        {{-- Time --}}
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Time</label>
+                            <input type="time" wire:model="time"
+                                class="w-full border rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500">
+                            @error('time') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                        </div>
+
+                        {{-- Notes --}}
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Notes</label>
+                            <textarea wire:model="notes" rows="3"
+                                class="w-full border rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 resize-none"
+                                placeholder="Optional notes about this appointment..."></textarea>
+                            @error('notes') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                        </div>
                     </div>
 
-                    {{-- Date --}}
+                    {{-- Right side: Services --}}
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">Date</label>
-                        <input type="date" wire:model="date"
-                            class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400">
-                        @error('date') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                    </div>
-
-                    {{-- Time --}}
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Time</label>
-                        <input type="time" wire:model="time"
-                            class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400">
-                        @error('time') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                    </div>
-
-                    {{-- Service Dropdown --}}
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Service</label>
-                        <select wire:model="service_id"
-                            class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400">
-                            <option value="">Select service</option>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Select Services</label>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[320px] overflow-y-auto pr-1">
                             @foreach($services as $service)
-                                <option value="{{ $service->id }}">{{ $service->name }}</option>
+                                <label
+                                    class="flex items-start border rounded-xl p-3 cursor-pointer hover:border-blue-500 transition {{ in_array($service->id, $service_ids) ? 'border-blue-500 bg-blue-50' : 'border-gray-200' }}">
+                                    <input type="checkbox" value="{{ $service->id }}" wire:model="service_ids"
+                                        class="mt-1 mr-3 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                    <div>
+                                        <p class="font-medium text-gray-800">{{ $service->name }}</p>
+                                        <p class="text-xs text-gray-500 mt-1">{{ $service->description }}</p>
+                                        <p class="text-xs text-blue-600 font-semibold mt-1">
+                                            ₱{{ number_format($service->price, 2) }}
+                                        </p>
+                                    </div>
+                                </label>
                             @endforeach
-                        </select>
-                        @error('service_id') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                    </div>
-
-                    {{-- Dentist Dropdown --}}
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Dentist</label>
-                        <select wire:model="dentist_id"
-                            class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400">
-                            <option value="">Select dentist</option>
-                            @foreach($dentists as $dentist)
-                                <option value="{{ $dentist->id }}">{{ $dentist->name }}</option>
-                            @endforeach
-                        </select>
-                        @error('dentist_id') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                        </div>
+                        @error('service_ids') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
                 </div>
 
-                <div class="flex justify-end space-x-2 mt-6">
+                {{-- Footer --}}
+                <div class="flex justify-end mt-8 space-x-3 border-t pt-4">
                     <button wire:click="closeModal"
-                        class="px-4 py-2 rounded-lg border hover:bg-gray-100 transition">Cancel</button>
+                        class="px-4 py-2 rounded-lg border hover:bg-gray-100 transition">
+                        Cancel
+                    </button>
                     <button wire:click="save"
-                        class="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white transition">
-                        Schedule
+                        class="px-6 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium transition">
+                        {{ $isEditMode ? 'Update Appointment' : 'Save Appointment' }}
                     </button>
                 </div>
             </div>

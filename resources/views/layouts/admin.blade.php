@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>iTeeth - Admin Dashboard</title>
-    <link rel="icon" href="{{ asset('icons/tooth.png') }}">
+    <link rel="icon" href="{{ asset('icons/logo.png') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
     

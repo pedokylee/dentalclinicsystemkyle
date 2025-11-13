@@ -1,5 +1,5 @@
 <!-- Appointment Section -->
-<section id="appointment" class="py-20 bg-gradient-to-r from-blue-600 to-blue-400 text-white">
+<section id="appointment" class="py-20 bg-gradient-to-r from-blue-600 to-green-400 text-white">
   <div class="max-w-5xl mx-auto px-6">
     <div class="text-center mb-12">
       <h2 class="text-3xl md:text-4xl font-bold mb-4">Book an Appointment</h2>
@@ -56,7 +56,7 @@
         <!-- Submit Button -->
         <div class="text-center pt-4">
           <button type="submit"
-                  class="px-10 py-3 bg-blue-600 text-white font-semibold rounded-md shadow-md hover:bg-blue-700 transition">
+                  class="px-10 py-3 bg-gradient-to-r from-blue-600 to-green-400 font-semibold rounded-md shadow-md hover:from-blue-700 hover:to-green-700 transition">
             Submit Appointment
           </button>
         </div>

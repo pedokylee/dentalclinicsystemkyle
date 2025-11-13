@@ -1,8 +1,49 @@
 <div>
+  <!-- About Hero Section with Orange Background -->
+  <section id="about" class="relative bg-gradient-to-br from-blue-400 via-green-500 to-orange-100 overflow-hidden">
+    <!-- Decorative tooth pattern background -->
+    <div class="absolute inset-0 opacity-10">
+      <div class="absolute top-10 left-10 w-64 h-64">
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
+          <path d="M30 25C25 25 20 28 18 35C16 42 15 50 15 58C15 66 15 74 17 80C19 86 23 90 30 92C35 94 40 92 42 88C43 85 44 82 44 78C44 70 44 60 44 52C44 45 42 38 38 32C36 28 33 25 30 25Z" fill="white"/>
+          <path d="M70 25C75 25 80 28 82 35C84 42 85 50 85 58C85 66 85 74 83 80C81 86 77 90 70 92C65 94 60 92 58 88C57 85 56 82 56 78C56 70 56 60 56 52C56 45 58 38 62 32C64 28 67 25 70 25Z" fill="white"/>
+        </svg>
+      </div>
+      <div class="absolute bottom-20 right-20 w-96 h-96">
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
+          <path d="M30 25C25 25 20 28 18 35C16 42 15 50 15 58C15 66 15 74 17 80C19 86 23 90 30 92C35 94 40 92 42 88C43 85 44 82 44 78C44 70 44 60 44 52C44 45 42 38 38 32C36 28 33 25 30 25Z" fill="white"/>
+          <path d="M70 25C75 25 80 28 82 35C84 42 85 50 85 58C85 66 85 74 83 80C81 86 77 90 70 92C65 94 60 92 58 88C57 85 56 82 56 78C56 70 56 60 56 52C56 45 58 38 62 32C64 28 67 25 70 25Z" fill="white"/>
+        </svg>
+      </div>
+      <div class="absolute top-1/2 left-1/3 w-80 h-80 transform -translate-x-1/2 -translate-y-1/2">
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
+          <path d="M30 25C25 25 20 28 18 35C16 42 15 50 15 58C15 66 15 74 17 80C19 86 23 90 30 92C35 94 40 92 42 88C43 85 44 82 44 78C44 70 44 60 44 52C44 45 42 38 38 32C36 28 33 25 30 25Z" fill="white"/>
+          <path d="M70 25C75 25 80 28 82 35C84 42 85 50 85 58C85 66 85 74 83 80C81 86 77 90 70 92C65 94 60 92 58 88C57 85 56 82 56 78C56 70 56 60 56 52C56 45 58 38 62 32C64 28 67 25 70 25Z" fill="white"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Curved bottom edge -->
+    <div class="absolute bottom-0 left-0 right-0">
+      <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full">
+        <path d="M0 0C480 80 960 80 1440 0V120H0V0Z" fill="white"/>
+      </svg>
+    </div>
+
+    <!-- Content -->
+    <div class="relative z-10 max-w-7xl mx-auto px-6 py-32 sm:py-40 lg:py-48 text-center">
+      <h1 class="text-5xl sm:text-6xl md:text-7xl font-bold text-white mb-6 tracking-tight">
+        Our Services
+      </h1>
+      <p class="text-xl sm:text-2xl text-white font-light">
+        We offer wide range dental services
+      </p>
+    </div>
+  </section>
+
+<div>
   <!-- Services Section -->
-  <section id="services" class="py-20 bg-blue-50">
     <div class="max-w-6xl mx-auto px-6 text-center">
-      <h2 class="text-3xl md:text-4xl font-bold text-blue-700 mb-12">Our Services</h2>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
 
         <!-- Teeth Cleaning -->

@@ -1,4 +1,4 @@
-<nav class="bg-gradient-to-r from-blue-600 to-blue-400 shadow-lg" x-data="{ mobileMenuOpen: false }">
+<nav class="bg-gradient-to-r from-blue-600 to-green-400 shadow-lg sticky top-0 z-50 backdrop-blur-md" x-data="{ mobileMenuOpen: false }">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-20">
             <!-- Logo -->
@@ -24,7 +24,7 @@
             <!-- Desktop Navigation -->
             <div class="hidden md:flex md:items-center md:space-x-2">
                 <a wire:click.prevent="toAbout" 
-                   class="px-4 py-2 text-white hover:bg-white hover:text-blue-500  hover:bg-opacity-20 rounded-lg transition-all duration-300 font-medium cursor-pointer hover:shadow-md">
+                   class="px-4 py-2 text-white hover:bg-white hover:text-blue-500  hover:bg-opacity-20 rounded-lg transition-all duration-300 font-medium cursor-pointer hover:shadow-md ">
                     About
                 </a>
                 <a wire:click.prevent="toServices" 
@@ -40,7 +40,7 @@
                     Locations
                 </a>
                 <a wire:click.prevent="toAppointment" 
-                   class="x-4 py-2 text-white hover:bg-white hover:text-blue-500 hover:bg-opacity-20 rounded-lg transition-all duration-300 font-medium cursor-pointer hover:shadow-md">
+                   class="px-5 py-2 text-white hover:bg-white hover:text-blue-500 hover:bg-opacity-20 rounded-lg transition-all duration-300 font-medium cursor-pointer hover:shadow-md">
                     Appointment
                 </a>
             </div>

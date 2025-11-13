@@ -38,7 +38,7 @@
   </section>
 
   <!-- Contact & Appointment CTA -->
-  <section id="contact" class="py-20 bg-gradient-to-r from-blue-600 to-blue-400 text-white text-center">
+  <section id="contact" class="py-20 bg-gradient-to-r from-blue-600 to-green-400 text-white text-center">
     <div class="max-w-3xl mx-auto px-6">
       <h2 class="text-3xl md:text-4xl font-bold mb-4">Let’s Keep Your Smile Bright</h2>
       <p class="text-white/90 mb-8">Contact us for inquiries or schedule your appointment today.</p>

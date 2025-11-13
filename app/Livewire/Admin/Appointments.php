@@ -16,21 +16,31 @@ class Appointments extends Component
 
     // Modal states
     public $isModalOpen = false;
+
     public $isEditMode = false;
+
     public $appointmentId = null;
 
     // Form fields
     public $patient_id;
+
     public $dentist_id;
+
     public $service_ids = [];
+
     public $date;
+
     public $time;
+
     public $status = 'scheduled';
+
     public $notes;
 
     // Loaded dropdowns
     public $patients = [];
+
     public $dentists = [];
+
     public $services = [];
 
     protected $rules = [
@@ -109,6 +119,7 @@ class Appointments extends Component
             : Carbon::parse($this->date);
 
         if ($this->isEditMode && $this->appointmentId) {
+            // Update existing appointment
             $appointment = Appointment::findOrFail($this->appointmentId);
             $appointment->update([
                 'patient_id' => $this->patient_id,
@@ -118,8 +129,23 @@ class Appointments extends Component
                 'notes' => $this->notes,
             ]);
             $appointment->services()->sync($this->service_ids);
+
+            // Create or update corresponding treatment
+            $procedureNames = Service::whereIn('id', $this->service_ids)->pluck('name')->join(', ');
+            Treatment::updateOrCreate(
+                ['appointment_id' => $appointment->id],
+                [
+                    'patient_id' => $this->patient_id,
+                    'dentist_id' => $this->dentist_id,
+                    'procedure' => $procedureNames,
+                    'status' => $this->status,
+                    'date' => $appointmentDate,
+                    'cost' => $appointment->services->sum('price'), // optional, can be 0 if not completed
+                    'notes' => $this->notes,
+                ]
+            );
         } else {
-            // Create appointment
+            // Create new appointment
             $appointment = Appointment::create([
                 'patient_id' => $this->patient_id,
                 'dentist_id' => $this->dentist_id,
@@ -137,9 +163,9 @@ class Appointments extends Component
                 'patient_id' => $this->patient_id,
                 'dentist_id' => $this->dentist_id,
                 'procedure' => $procedureNames,
-                'status' => 'scheduled',
+                'status' => $this->status,
                 'date' => $appointmentDate,
-                'cost' => 0, // will be updated when marked completed
+                'cost' => 0,
                 'notes' => $this->notes,
             ]);
         }

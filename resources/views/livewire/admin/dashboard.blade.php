@@ -64,57 +64,75 @@
             @endforeach
         </div>
 
-        {{-- Two-column section: Upcoming Appointments & Recent Activity --}}
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+        {{-- Two-column section: Appointments & Recent Activity --}}
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
 
-            {{-- Upcoming Appointments --}}
-            <div class="bg-white rounded-2xl shadow-md">
-                <div class="p-6 border-b">
-                    <h3 class="text-lg font-semibold text-gray-900">Today's Appointments</h3>
-                </div>
-                <div class="p-6 space-y-4">
-                    @foreach ($upcomingAppointments as $appointment)
-                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                            <div class="flex items-center space-x-3">
-                                <div class="text-center">
-                                    <p class="text-xs text-gray-500">Time</p>
-                                    <p class="text-sm text-gray-900">{{ $appointment['time'] }}</p>
-                                </div>
-                                <div class="w-px h-10 bg-gray-300"></div>
-                                <div>
-                                    <p class="text-gray-900">{{ $appointment['patient'] }}</p>
-                                    <p class="text-sm text-gray-500">{{ $appointment['type'] }}</p>
-                                </div>
-                            </div>
-                            <span class="px-3 py-1 rounded-full text-xs font-semibold 
-                                {{ $appointment['status'] === 'confirmed' ? 'bg-blue-100 text-blue-700' : 'bg-gray-200 text-gray-700' }}">
-                                {{ $appointment['status'] }}
-                            </span>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-
-            {{-- Recent Activity --}}
-            <div class="bg-white rounded-2xl shadow-md">
-                <div class="p-6 border-b">
-                    <h3 class="text-lg font-semibold text-gray-900">Recent Activity</h3>
-                </div>
-                <div class="p-6 space-y-4">
-                    @foreach ($recentActivity as $activity)
-                        <div class="flex items-start space-x-3">
-                            <div class="w-2 h-2 bg-blue-600 rounded-full mt-2"></div>
-                            <div class="flex-1">
-                                <p class="text-sm text-gray-900">{{ $activity['action'] }}</p>
-                                <p class="text-sm text-gray-600">{{ $activity['patient'] }}</p>
-                                <p class="text-xs text-gray-400 mt-1">{{ $activity['time'] }}</p>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-
+    {{-- Today's Appointments --}}
+    <div class="bg-white rounded-2xl shadow-md lg:col-span-1">
+        <div class="p-6 border-b">
+            <h3 class="text-lg font-semibold text-gray-900">Today's Appointments</h3>
         </div>
+        <div class="p-6 space-y-4">
+            @forelse ($todayAppointments as $appointment)
+                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
+                    <div>
+                        <p class="font-medium text-gray-900">{{ $appointment['patient'] }}</p>
+                        <p class="text-sm text-gray-500">{{ $appointment['time'] }} • {{ $appointment['type'] }}</p>
+                    </div>
+                    <span class="px-3 py-1 rounded-full text-xs font-semibold 
+                        {{ $appointment['status'] === 'scheduled' ? 'bg-blue-100 text-blue-700' : 'bg-gray-200 text-gray-700' }}">
+                        {{ ucfirst($appointment['status']) }}
+                    </span>
+                </div>
+            @empty
+                <p class="text-gray-500 text-sm">No appointments today.</p>
+            @endforelse
+        </div>
+    </div>
+
+    {{-- Upcoming Appointments --}}
+    <div class="bg-white rounded-2xl shadow-md lg:col-span-1">
+        <div class="p-6 border-b">
+            <h3 class="text-lg font-semibold text-gray-900">Upcoming Appointments</h3>
+        </div>
+        <div class="p-6 space-y-4">
+            @forelse ($upcomingAppointments as $appointment)
+                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
+                    <div>
+                        <p class="font-medium text-gray-900">{{ $appointment['patient'] }}</p>
+                        <p class="text-sm text-gray-500">{{ $appointment['date'] }} • {{ $appointment['time'] }}</p>
+                    </div>
+                    <span class="px-3 py-1 rounded-full text-xs font-semibold 
+                        {{ $appointment['status'] === 'scheduled' ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-700' }}">
+                        {{ ucfirst($appointment['status']) }}
+                    </span>
+                </div>
+            @empty
+                <p class="text-gray-500 text-sm">No upcoming appointments.</p>
+            @endforelse
+        </div>
+    </div>
+
+    {{-- Recent Activity --}}
+    <div class="bg-white rounded-2xl shadow-md lg:col-span-1">
+        <div class="p-6 border-b">
+            <h3 class="text-lg font-semibold text-gray-900">Recent Activity</h3>
+        </div>
+        <div class="p-6 space-y-4">
+            @foreach ($recentActivity as $activity)
+                <div class="flex items-start space-x-3">
+                    <div class="w-2 h-2 bg-blue-600 rounded-full mt-2"></div>
+                    <div class="flex-1">
+                        <p class="text-sm text-gray-900">{{ $activity['action'] }}</p>
+                        <p class="text-sm text-gray-600">{{ $activity['patient'] }}</p>
+                        <p class="text-xs text-gray-400 mt-1">{{ $activity['time'] }}</p>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
+</div>
+
     </div>
 
 </div>

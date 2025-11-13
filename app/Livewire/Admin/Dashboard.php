@@ -6,6 +6,7 @@ use App\Models\Appointment;
 use App\Models\Dentist;
 use App\Models\Patient;
 use App\Models\Service;
+use App\Models\ActivityLog;
 use Carbon\Carbon;
 use Livewire\Component;
 
@@ -13,53 +14,70 @@ class Dashboard extends Component
 {
     public $patients = 0;
     public $patientsChange = 0;
-
     public $dentists = 0;
     public $activeToday = 0;
     public $appointments = 0;
     public $revenue = 0;
-
     public $services = 0;
     public $activeServices = 0;
 
+    public $todayAppointments = [];
     public $upcomingAppointments = [];
     public $recentActivity = [];
 
     public function mount()
     {
-        // Count total patients
+        // Stats
         $this->patients = Patient::count();
-
-        // Count patients added yesterday
         $yesterdayCount = Patient::whereDate('created_at', Carbon::yesterday())->count();
-
-        // Change compared to yesterday
         $this->patientsChange = $this->patients - $yesterdayCount;
 
-        // Count total services
         $this->services = Service::count();
-
-        // Count active services
         $this->activeServices = Service::where('is_active', true)->count();
-
-        // Count total dentists
         $this->dentists = Dentist::count();
 
-        // Count active dentists today
-        $today = Carbon::now()->format('l'); // e.g. "Monday"
+        $today = Carbon::now()->format('l');
         $this->activeToday = Dentist::where('status', 'active')
             ->whereJsonContains('availability', [$today])
             ->count();
 
-        // Recent patient activity
-        $this->recentActivity = Patient::latest()
-            ->take(5)
+        // Appointments
+        $this->todayAppointments = Appointment::whereDate('appointment_date', Carbon::today())
+            ->with(['patient.user'])
             ->get()
-            ->map(function ($patient) {
+            ->map(function ($appointment) {
                 return [
-                    'action' => 'Patient added',
-                    'patient' => $patient->user->name ?? 'Unknown',
-                    'time' => $patient->created_at->diffForHumans(),
+                    'time' => Carbon::parse($appointment->appointment_date)->format('h:i A'),
+                    'patient' => $appointment->patient->user->name ?? 'Unknown',
+                    'type' => optional($appointment->service)->name ?? 'General Consultation',
+                    'status' => $appointment->status,
+                ];
+            })->toArray();
+
+        $this->upcomingAppointments = Appointment::whereDate('appointment_date', '>', Carbon::today())
+            ->orderBy('appointment_date')
+            ->take(5)
+            ->with(['patient.user'])
+            ->get()
+            ->map(function ($appointment) {
+                return [
+                    'date' => Carbon::parse($appointment->appointment_date)->format('M d, Y'),
+                    'time' => Carbon::parse($appointment->appointment_date)->format('h:i A'),
+                    'patient' => $appointment->patient->user->name ?? 'Unknown',
+                    'type' => optional($appointment->service)->name ?? 'General Consultation',
+                    'status' => $appointment->status,
+                ];
+            })->toArray();
+
+        // Activity Log
+        $this->recentActivity = ActivityLog::latest()
+            ->take(5)
+            ->get(['action', 'user', 'details', 'created_at'])
+            ->map(function ($log) {
+                return [
+                    'action' => $log->action,
+                    'patient' => $log->details ?? '',
+                    'time' => $log->created_at->diffForHumans(),
                 ];
             })->toArray();
     }
@@ -70,8 +88,8 @@ class Dashboard extends Component
             [
                 'title' => 'Total Patients',
                 'value' => $this->patients,
-                'change' => $this->patientsChange > 0 
-                    ? "+{$this->patientsChange}%" 
+                'change' => $this->patientsChange > 0
+                    ? "+{$this->patientsChange}%"
                     : ($this->patientsChange < 0 ? "{$this->patientsChange}%" : "+0%"),
                 'color' => 'text-blue-600',
                 'bgColor' => 'bg-blue-50',
@@ -79,7 +97,7 @@ class Dashboard extends Component
             ],
             [
                 'title' => "Today's Appointments",
-                'value' => $this->appointments,
+                'value' => count($this->todayAppointments),
                 'change' => '+0%',
                 'color' => 'text-green-600',
                 'bgColor' => 'bg-green-50',

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>iTeeth</title>
-    <link rel="icon" href="{{ asset('icons/tooth.png') }}">
+    <link rel="icon" href="{{ asset('../public/favicon.svg') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
 </head>

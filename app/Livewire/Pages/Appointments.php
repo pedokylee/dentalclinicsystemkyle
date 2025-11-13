@@ -23,7 +23,7 @@ class Appointments extends Component
             'concerns' => 'nullable|string|max:1000',
         ]);
 
-        // 🔹 Step 1: Find or create the user
+        //Find or create the user
         $user = User::firstOrCreate(
             ['email' => $this->email],
             [
@@ -32,7 +32,7 @@ class Appointments extends Component
             ]
         );
 
-        // 🔹 Step 2: Find or create the patient linked to that user
+        // Find or create the patient linked to that user
         $patient = Patient::firstOrCreate(
             ['user_id' => $user->id],
             [
@@ -41,7 +41,7 @@ class Appointments extends Component
             ]
         );
 
-        // 🔹 Step 3: Create the appointment
+        //Create the appointment
         Appointment::create([
             'patient_id' => $patient->id,
             'dentist_id' => null, // assigned later by admin
@@ -52,7 +52,7 @@ class Appointments extends Component
             'status' => 'scheduled',
         ]);
 
-        // 🔹 Step 4: Clear the form and show a success message
+        // Clear the form and show a success message
         $this->reset();
         session()->flash('message', 'Your appointment request has been submitted successfully!');
     }

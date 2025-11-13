@@ -25,8 +25,37 @@
 
         {{-- Search --}}
         <div class="mt-6">
-            <input type="text" wire:model="searchQuery" placeholder="Search by patient or procedure..."
+            <input type="text" wire:model.live.debounce.300ms="searchQuery" placeholder="Search by patient or procedure..."
                 class="w-full border rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        </div>
+
+        {{-- Filters --}}
+        <div class="mt-4 flex items-center space-x-4">
+            {{-- Date Filter --}}
+            <div>
+                <label class="text-sm font-semibold text-gray-700">Filter by Date</label>
+                <input type="date" wire:model.live="filterDate"
+                    class="border rounded-xl px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            </div>
+
+            {{-- Status Filter --}}
+            <div>
+                <label class="text-sm font-semibold text-gray-700">Filter by Status</label>
+                <select wire:model.live="filterStatus"
+                    class="border rounded-xl px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    <option value="">All</option>
+                    <option value="scheduled">Scheduled</option>
+                    <option value="in-progress">In-progress</option>
+                    <option value="completed">Completed</option>
+                    <option value="cancelled">Cancelled</option>
+                </select>
+            </div>
+
+            {{-- Clear filters --}}
+            <button wire:click="clearFilters"
+                class="px-3 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm hover:bg-gray-300 transition">
+                Clear
+            </button>
         </div>
 
         {{-- Treatments Table --}}
@@ -46,21 +75,18 @@
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($treatments as $treatment)
                         <tr>
-                            <td class="px-4 py-2 text-gray-600">
-                                {{ \Carbon\Carbon::parse($treatment->date)->format('Y-m-d') }}</td>
-                            <td class="px-4 py-2">
-                                {{ $treatment->patient->user->name ?? 'N/A' }}
-                            </td>
+                            <td class="px-4 py-2 text-gray-600">{{ \Carbon\Carbon::parse($treatment->date)->format('Y-m-d') }}</td>
+                            <td class="px-4 py-2">{{ $treatment->patient->user->name ?? 'N/A' }}</td>
                             <td class="px-4 py-2">{{ $treatment->procedure }}</td>
                             <td class="px-4 py-2">{{ $treatment->dentist->name ?? 'N/A' }}</td>
                             <td class="px-4 py-2">₱{{ number_format($treatment->cost, 2) }}</td>
                             <td class="px-4 py-2">
                                 <span class="inline-block px-2 py-1 rounded-full text-xs
-                                        @if($treatment->status === 'completed') bg-green-100 text-green-700
-                                        @elseif($treatment->status === 'in-progress') bg-yellow-100 text-yellow-700
-                                        @elseif($treatment->status === 'scheduled') bg-gray-100 text-gray-700
-                                        @elseif($treatment->status === 'cancelled') bg-red-300 text-gray-700
-                                        @endif">
+                                    @if($treatment->status === 'completed') bg-green-100 text-green-700
+                                    @elseif($treatment->status === 'in-progress') bg-yellow-100 text-yellow-700
+                                    @elseif($treatment->status === 'scheduled') bg-gray-100 text-gray-700
+                                    @elseif($treatment->status === 'cancelled') bg-red-300 text-gray-700
+                                    @endif">
                                     {{ ucfirst($treatment->status) }}
                                 </span>
                             </td>
@@ -68,13 +94,11 @@
                                 <select wire:change="updateStatus({{ $treatment->id }}, $event.target.value)"
                                     class="border rounded px-2 py-1 text-sm">
                                     <option value="scheduled" @selected($treatment->status === 'scheduled')>Scheduled</option>
-                                    <option value="in-progress" @selected($treatment->status === 'in-progress')>On-going
-                                    </option>
+                                    <option value="in-progress" @selected($treatment->status === 'in-progress')>On-going</option>
                                     <option value="completed" @selected($treatment->status === 'completed')>Completed</option>
                                     <option value="cancelled" @selected($treatment->status === 'cancelled')>Cancelled</option>
                                 </select>
                             </td>
-
                         </tr>
                     @empty
                         <tr>
@@ -84,6 +108,7 @@
                 </tbody>
             </table>
         </div>
+
     </div>
 
     {{-- Treatment Details Modal --}}
@@ -92,25 +117,21 @@
             <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl p-8 max-h-[90vh] overflow-y-auto">
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-2xl font-semibold text-gray-800">Treatment Details</h2>
-                    <button wire:click="closeModal" class="text-gray-500 hover:text-gray-800 transition">
-                        ✕
-                    </button>
+                    <button wire:click="closeModal" class="text-gray-500 hover:text-gray-800 transition">✕</button>
                 </div>
-
                 <div class="space-y-4">
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <p class="text-sm text-gray-600">Date</p>
-                            <p class="text-gray-900">{{ \Carbon\Carbon::parse($selectedTreatment->date)->format('Y-m-d') }}
-                            </p>
+                            <p class="text-gray-900">{{ \Carbon\Carbon::parse($selectedTreatment->date)->format('Y-m-d') }}</p>
                         </div>
                         <div>
                             <p class="text-sm text-gray-600">Status</p>
                             <span class="inline-block px-2 py-1 rounded-full text-xs
-                                    @if($selectedTreatment->status === 'completed') bg-green-100 text-green-700
-                                    @elseif($selectedTreatment->status === 'in-progress') bg-yellow-100 text-yellow-700
-                                    @elseif($selectedTreatment->status === 'scheduled') bg-gray-100 text-gray-700
-                                    @endif">
+                                @if($selectedTreatment->status === 'completed') bg-green-100 text-green-700
+                                @elseif($selectedTreatment->status === 'in-progress') bg-yellow-100 text-yellow-700
+                                @elseif($selectedTreatment->status === 'scheduled') bg-gray-100 text-gray-700
+                                @endif">
                                 {{ ucfirst($selectedTreatment->status) }}
                             </span>
                         </div>
@@ -139,4 +160,5 @@
             </div>
         </div>
     @endif
+
 </div>

@@ -27,7 +27,7 @@ class Dashboard extends Component
 
     public function mount()
     {
-        // 🧮 Stats
+        // Stats
         $this->patients = Patient::count();
         $yesterdayCount = Patient::whereDate('created_at', Carbon::yesterday())->count();
         $this->patientsChange = $this->patients - $yesterdayCount;
@@ -41,7 +41,7 @@ class Dashboard extends Component
             ->whereJsonContains('availability', [$today])
             ->count();
 
-        // 🗓️ Appointments
+        // Appointments
         $this->todayAppointments = Appointment::whereDate('appointment_date', Carbon::today())
             ->with(['patient.user'])
             ->get()
@@ -69,7 +69,7 @@ class Dashboard extends Component
                 ];
             })->toArray();
 
-        // 🧾 Activity Log
+        // Activity Log
         $this->recentActivity = ActivityLog::latest()
             ->take(5)
             ->get(['action', 'user', 'details', 'created_at'])

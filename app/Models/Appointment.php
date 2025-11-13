@@ -47,8 +47,24 @@ class Appointment extends Model
         return $this->hasOne(Invoice::class);
     }
 
-    public function treatments()
+   public function treatment()
+{
+    return $this->hasOne(Treatment::class);
+}
+    protected static function booted()
     {
-        return $this->hasMany(Treatment::class);
+        static::updated(function ($appointment) {
+            if (($appointment->dentist_id || $appointment->service_id) && !$appointment->treatment) {
+                $appointment->treatment()->create([
+                    'patient_id' => $appointment->patient_id,
+                    'dentist_id' => $appointment->dentist_id,
+                    'procedure' => optional($appointment->service)->name ?? 'General Consultation',
+                    'date' => $appointment->appointment_date,
+                    'notes' => $appointment->notes,
+                    'status' => 'scheduled',
+                    'cost' => 0,
+                ]);
+            }
+        });
     }
 }

@@ -10,18 +10,21 @@ use Livewire\Component;
 class Treatments extends Component
 {
     public $searchQuery = '';
+    public $filterDate = '';    // Date filter
+    public $filterStatus = '';  // Status filter
 
     public $selectedTreatment = null;
-
     public $patients = [];
-
     public $dentists = [];
+
+    // For instant updates
+    protected $updatesQueryString = ['searchQuery', 'filterDate', 'filterStatus'];
 
     public function mount()
     {
         $this->patients = Patient::with('user')
             ->get()
-            ->sortBy(fn ($p) => $p->user->name ?? '');
+            ->sortBy(fn($p) => $p->user->name ?? '');
         $this->dentists = Dentist::where('status', 'active')->orderBy('name')->get();
     }
 
@@ -39,24 +42,33 @@ class Treatments extends Component
     public function updateStatus($treatmentId, $newStatus)
     {
         $treatment = Treatment::with('appointment.services')->findOrFail($treatmentId);
-
         $treatment->status = $newStatus;
 
         if ($newStatus === 'completed' && $treatment->appointment) {
-            // Calculate cost based on appointment services
             $treatment->cost = $treatment->appointment->services->sum('price');
         }
 
         $treatment->save();
     }
 
+    public function clearFilters()
+    {
+        $this->reset(['searchQuery', 'filterDate', 'filterStatus']);
+    }
+
     public function render()
     {
-        $treatments = Treatment::with(['patient.user', 'dentist'])
-            ->whereHas('patient.user', function ($query) {
-                $query->where('name', 'like', "%{$this->searchQuery}%");
+        $treatments = Treatment::with(['patient.user', 'dentist', 'appointment.services'])
+            ->when($this->searchQuery, function($query) {
+                $query->where(function($q) {
+                    $q->whereHas('patient.user', function($q2) {
+                        $q2->where('name', 'like', "%{$this->searchQuery}%");
+                    })
+                    ->orWhere('procedure', 'like', "%{$this->searchQuery}%");
+                });
             })
-            ->orWhere('procedure', 'like', "%{$this->searchQuery}%")
+            ->when($this->filterDate, fn($q) => $q->whereDate('date', $this->filterDate))
+            ->when($this->filterStatus, fn($q) => $q->where('status', $this->filterStatus))
             ->orderByDesc('date')
             ->get();
 

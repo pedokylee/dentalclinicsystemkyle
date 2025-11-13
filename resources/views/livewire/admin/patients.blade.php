@@ -1,4 +1,5 @@
-<div class="min-h-screen bg-gray-100 pt-20"> <!-- padding-top to match header -->
+<div class="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-gray-100 pt-20">
+    <!-- padding-top to match header -->
 
     <!-- Navbar -->
     <div class="mb-4 sm:mb-6">
@@ -42,7 +43,8 @@
                         <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Patient Name</th>
                         <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Contact</th>
                         <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Last Visit</th>
-                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Next Appointment</th>
+                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Next Appointment
+                        </th>
                         <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
                         <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
                     </tr>
@@ -75,8 +77,9 @@
                                 {{ $patient->next_appointment ? $patient->next_appointment->format('Y-m-d') : 'Not scheduled' }}
                             </td>
                             <td class="px-4 py-2">
-                                <span class="inline-block px-2 py-1 rounded-full text-xs font-semibold whitespace-nowrap
-                                    {{ $patient->status === 'active' ? 'bg-green-100 text-green-700' : ($patient->status === 'inactive' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700') }}">
+                                <span
+                                    class="inline-block px-2 py-1 rounded-full text-xs font-semibold whitespace-nowrap
+                                        {{ $patient->status === 'active' ? 'bg-green-100 text-green-700' : ($patient->status === 'inactive' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700') }}">
                                     {{ ucfirst($patient->status ?? 'N/A') }}
                                 </span>
                             </td>
@@ -99,7 +102,8 @@
         {{-- Add Patient Modal --}}
         @if($isAddModalOpen)
             <div class="fixed inset-0 flex items-center justify-center bg-black/30 backdrop-blur-sm z-[9999]">
-                <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-5 relative border border-gray-100 animate-fade-in">
+                <div
+                    class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-5 relative border border-gray-100 animate-fade-in">
                     <h3 class="text-xl font-semibold text-gray-800 mb-4 text-left">Add New Patient</h3>
 
                     <div class="space-y-3">
@@ -151,7 +155,7 @@
         {{-- View / Edit / Delete Modal --}}
         @if($isViewModalOpen)
             <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
-                <div class="bg-white rounded-2xl w-full max-w-md mx-4 p-6 animate-fade-in">
+                <div class="bg-white rounded-2xl w-full max-w-md mx-4 p-6 animate-fade-in max-h-[90vh] overflow-y-auto">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-xl font-semibold text-gray-800">Patient Details</h3>
                         @if($isEditMode)
@@ -167,8 +171,7 @@
                         </div>
                         <div>
                             @if($isEditMode)
-                                <input type="text" wire:model.defer="name"
-                                    class="border rounded px-2 py-1 w-full" />
+                                <input type="text" wire:model.defer="name" class="border rounded px-2 py-1 w-full" />
                             @else
                                 <h3 class="text-gray-900">{{ $selectedPatient->user->name }}</h3>
                                 <p class="text-sm text-gray-500">{{ $selectedPatient->gender ?? '-' }}</p>
@@ -204,7 +207,6 @@
                             @endif
                         </div>
 
-                        {{-- Status --}}
                         <div class="flex justify-between text-sm">
                             <span class="text-gray-600">Status:</span>
                             @if($isEditMode)
@@ -214,8 +216,9 @@
                                     <option value="pending">Pending</option>
                                 </select>
                             @else
-                                <span class="inline-block px-2 py-1 rounded-full text-xs font-semibold whitespace-nowrap
-                                    {{ $selectedPatient->status === 'active' ? 'bg-green-100 text-green-700' : ($selectedPatient->status === 'inactive' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700') }}">
+                                <span
+                                    class="inline-block px-2 py-1 rounded-full text-xs font-semibold whitespace-nowrap
+                                {{ $selectedPatient->status === 'active' ? 'bg-green-100 text-green-700' : ($selectedPatient->status === 'inactive' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700') }}">
                                     {{ ucfirst($selectedPatient->status ?? 'N/A') }}
                                 </span>
                             @endif
@@ -228,11 +231,49 @@
                             </span>
                         </div>
 
-                        <div class="flex justify-between text-sm">
+                        <div class="flex justify-between text-sm mb-3">
                             <span class="text-gray-600">Next Appointment:</span>
                             <span class="text-gray-900">
                                 {{ $selectedPatient->next_appointment ? $selectedPatient->next_appointment->format('Y-m-d') : 'Not scheduled' }}
                             </span>
+                        </div>
+
+                        {{-- 🦷 Scheduled Appointments Section --}}
+                        <div class="mt-4">
+                            <h4 class="text-md font-semibold text-gray-800 mb-2">Scheduled Appointments</h4>
+
+                            @if($selectedPatient->appointments->count())
+                                <div class="space-y-2 max-h-56 overflow-y-auto">
+                                    @foreach($selectedPatient->appointments as $apt)
+                                        <div class="p-3 bg-gray-50 rounded-lg border hover:bg-blue-50 transition">
+                                            <div class="flex justify-between items-center">
+                                                <div>
+                                                    <p class="text-sm font-medium text-gray-900">
+                                                        {{ $apt->services->pluck('name')->join(', ') ?: 'No services listed' }}
+                                                    </p>
+                                                    <p class="text-xs text-gray-500">
+                                                        Dentist: {{ $apt->dentist->name ?? 'N/A' }}
+                                                    </p>
+                                                    <p class="text-xs text-gray-500">
+                                                        Date:
+                                                        {{ \Carbon\Carbon::parse($apt->appointment_date)->format('M d, Y h:i A') }}
+                                                    </p>
+                                                </div>
+                                                <span class="text-xs px-2 py-1 rounded-full
+                                                    @if($apt->status == 'scheduled') bg-gray-100 text-gray-700
+                                                    @elseif($apt->status == 'confirmed') bg-green-100 text-green-700
+                                                    @elseif($apt->status == 'completed') bg-blue-100 text-blue-700
+                                                    @elseif($apt->status == 'cancelled') bg-red-100 text-red-700
+                                                    @endif">
+                                                    {{ ucfirst($apt->status) }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @else
+                                <p class="text-sm text-gray-500 italic">No scheduled appointments.</p>
+                            @endif
                         </div>
                     </div>
 
@@ -242,13 +283,15 @@
                             <button wire:click="$set('isEditMode', false)" class="px-4 py-2 border rounded">Cancel</button>
                         @else
                             <button wire:click="enableEdit" class="px-4 py-2 bg-yellow-400 text-white rounded">Edit</button>
-                            <button wire:click="deletePatient({{ $selectedPatient->id }})" class="px-4 py-2 bg-red-600 text-white rounded">Delete</button>
+                            <button wire:click="deletePatient({{ $selectedPatient->id }})"
+                                class="px-4 py-2 bg-red-600 text-white rounded">Delete</button>
                             <button wire:click="closeModal" class="px-4 py-2 border rounded">Close</button>
                         @endif
                     </div>
                 </div>
             </div>
         @endif
+
 
     </div>
 </div>

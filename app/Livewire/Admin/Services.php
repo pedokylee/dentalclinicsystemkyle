@@ -15,7 +15,6 @@ class Services extends Component
     // Form fields
     public $name;
     public $description;
-    public $duration;
     public $price;
     public $category;
     public $isActive = true;
@@ -46,44 +45,39 @@ class Services extends Component
     public function openEditModal($serviceId)
     {
         $this->selectedService = Service::find($serviceId);
+
+        if (!$this->selectedService) return;
+
         $this->name = $this->selectedService->name;
         $this->description = $this->selectedService->description;
-        $this->duration = $this->selectedService->duration;
         $this->price = $this->selectedService->price;
         $this->category = $this->selectedService->category;
-
-        // Ensure boolean for the checkbox
         $this->isActive = (bool) $this->selectedService->is_active;
 
-        // Open modal
         $this->isAddModalOpen = true;
     }
 
     public function saveService()
     {
         $this->validate([
-            'name' => 'required|string',
+            'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'duration' => 'required|integer|min:1',
             'price' => 'required|numeric|min:0',
-            'category' => 'required|string',
+            'category' => 'required|string|max:255',
         ]);
 
         $data = [
             'name' => $this->name,
             'description' => $this->description,
-            'duration' => $this->duration,
             'price' => $this->price,
             'category' => $this->category,
-            'is_active' => (bool) $this->isActive, // ensure boolean
+            'is_active' => (bool) $this->isActive,
         ];
 
         if ($this->selectedService) {
-            // Update existing
             $this->selectedService->update($data);
             $this->selectedService = null;
         } else {
-            // Create new
             Service::create($data);
         }
 
@@ -102,7 +96,6 @@ class Services extends Component
     {
         $this->name = '';
         $this->description = '';
-        $this->duration = '';
         $this->price = '';
         $this->category = '';
         $this->isActive = true;
@@ -111,8 +104,9 @@ class Services extends Component
     public function render()
     {
         $filteredServices = collect($this->services)->filter(function ($service) {
-            return str_contains(strtolower($service['name']), strtolower($this->searchQuery))
-                || str_contains(strtolower($service['category']), strtolower($this->searchQuery));
+            $search = strtolower($this->searchQuery);
+            return str_contains(strtolower($service['name']), $search)
+                || str_contains(strtolower($service['category']), $search);
         });
 
         return view('livewire.admin.services', [

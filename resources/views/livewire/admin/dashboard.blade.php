@@ -1,4 +1,4 @@
-<div class="min-h-screen bg-gray-100 pt-20"> <!-- padding-top to match header -->
+<div class="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-gray-100 pt-20"> <!-- padding-top to match header -->
 
     <!-- Navbar -->
     <div class="mb-4 sm:mb-6">  

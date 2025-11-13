@@ -11,8 +11,8 @@ return new class extends Migration
         Schema::create('activity_logs', function (Blueprint $table) {
             $table->id();
             $table->string('action'); // e.g. 'Created new patient'
-            $table->string('user')->nullable(); // e.g. 'Admin Shaun' or 'Public Form'
-            $table->text('details')->nullable(); // optional details like 'Patient: John Doe'
+            $table->string('user')->nullable();
+            $table->text('details')->nullable(); 
             $table->timestamps();
         });
     }

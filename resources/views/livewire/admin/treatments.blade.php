@@ -59,6 +59,7 @@
                                         @if($treatment->status === 'completed') bg-green-100 text-green-700
                                         @elseif($treatment->status === 'in-progress') bg-yellow-100 text-yellow-700
                                         @elseif($treatment->status === 'scheduled') bg-gray-100 text-gray-700
+                                        @elseif($treatment->status === 'cancelled') bg-red-300 text-gray-700
                                         @endif">
                                     {{ ucfirst($treatment->status) }}
                                 </span>

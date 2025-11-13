@@ -43,27 +43,13 @@
                    class="w-full border border-blue-200 rounded-md px-4 py-3 text-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
           </div>
 
-          <!-- Service -->
+          <!-- Concerns -->
           <div class="md:col-span-2">
-            <label class="block text-sm font-semibold text-blue-700 mb-2">Service Type</label>
-            <select wire:model.defer="service" required
-                    class="w-full border border-blue-200 rounded-md px-4 py-3 text-gray-700 bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
-              <option value="">Select a Service</option>
-              <option value="cleaning">Teeth Cleaning</option>
-              <option value="whitening">Teeth Whitening</option>
-              <option value="braces">Orthodontics (Braces)</option>
-              <option value="extraction">Tooth Extraction</option>
-              <option value="checkup">Routine Checkup</option>
-            </select>
-          </div>
-
-          <!-- Message -->
-          <div class="md:col-span-2">
-            <label class="block text-sm font-semibold text-blue-700 mb-2">Additional Notes</label>
-            <textarea wire:model.defer="message"
+            <label class="block text-sm font-semibold text-blue-700 mb-2">Your Concerns</label>
+            <textarea wire:model.defer="concerns"
                       rows="4"
                       class="w-full border border-blue-200 rounded-md px-4 py-3 text-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
-                      placeholder="Tell us about any specific concerns or questions..."></textarea>
+                      placeholder="Describe your dental issue, symptoms, or request..."></textarea>
           </div>
         </div>
 
@@ -75,15 +61,15 @@
           </button>
         </div>
       </form>
-    </div>
 
-    <!-- Success Message (Optional Example) -->
-    {{-- 
-    <div class="mt-8 text-center">
-      <p class="bg-green-100 text-green-700 inline-block px-6 py-3 rounded-md font-medium">
-        ✅ Your appointment request has been submitted successfully!
-      </p>
+      <!-- Success Message -->
+      @if (session()->has('message'))
+        <div class="mt-6 text-center">
+          <p class="bg-green-100 text-green-700 inline-block px-6 py-3 rounded-md font-medium">
+             {{ session('message') }}
+          </p>
+        </div>
+      @endif
     </div>
-    --}}
   </div>
 </section>

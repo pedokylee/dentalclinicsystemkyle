@@ -13,13 +13,28 @@ return new class extends Migration
     {
         Schema::create('appointments', function (Blueprint $table) {
             $table->id();
+
+            // Patient (always required)
             $table->foreignId('patient_id')->constrained()->cascadeOnDelete();
+
+            // Dentist (nullable, assigned later by admin)
             $table->foreignId('dentist_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('service_id')->constrained()->cascadeOnDelete();
+
+            // Service (nullable, chosen later by admin)
+            $table->foreignId('service_id')->nullable()->constrained()->nullOnDelete();
+
+            // Facility (optional)
             $table->foreignId('facility_id')->nullable()->constrained()->nullOnDelete();
+
+            // Date & Time
             $table->timestamp('appointment_date');
+
+            // Status (default: scheduled)
             $table->enum('status', ['scheduled', 'completed', 'cancelled'])->default('scheduled');
+
+            // Notes / Concerns
             $table->text('notes')->nullable();
+
             $table->timestamps();
         });
     }
